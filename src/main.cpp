@@ -132,7 +132,7 @@ int main() {
 
           // Due to the sign starting at 0, the orientation error is -f'(x).
           // derivative of coeffs[0] + coeffs[1] * x + coeffs[2] * x^2 + coeffs[3] * x^3-> coeffs[1] + 2*coeffs[2]*x + 3*coeffs[3]*x^2
-          double epsi = atan(coeffs[1]);  // because -f'(0)
+          double epsi = -atan(coeffs[1]);  // because -f'(0)
 
           state << x_ptrs(0), y_ptrs(0), psi, v, cte, epsi;
 
@@ -149,7 +149,7 @@ int main() {
 
           auto vars = mpc.Solve(state, coeffs);
 
-          steer_value = vars[6];
+          steer_value = -vars[6];
           throttle_value = vars[7];
 
           json msgJson;
@@ -215,7 +215,7 @@ int main() {
           //
           // NOTE: REMEMBER TO SET THIS TO 100 MILLISECONDS BEFORE
           // SUBMITTING.
-          this_thread::sleep_for(chrono::milliseconds(100));
+          //this_thread::sleep_for(chrono::milliseconds(100));
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
         }
       } else {

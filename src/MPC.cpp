@@ -7,9 +7,9 @@ using CppAD::AD;
 
 // TODO: Set the timestep length and duration
 // N * dt = total time in seconds
-size_t N = 25;//25;
-//double dt = 0.05;  // this is in seconds
-double dt = 0.125; // this is to make dt larger than 100 millisecond latench
+size_t N = 10;//25;
+double dt = 0.05;  // this is in seconds
+//double dt = 0.125; // this is to make dt larger than 100 millisecond latench
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -251,7 +251,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   options += "Sparse  true        reverse\n";
   // NOTE: Currently the solver has a maximum time limit of 0.5 seconds.
   // Change this as you see fit.
-  options += "Numeric max_cpu_time          0.5\n";
+  options += "Numeric max_cpu_time          0.05\n";
 
   // place to return solution
   CppAD::ipopt::solve_result<Dvector> solution;
@@ -264,6 +264,11 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   // Check some of the solution values
   ok &= solution.status == CppAD::ipopt::solve_result<Dvector>::success;
 
+  if (!ok)
+  {
+    cout << "Solver failure!!!" << endl;
+    exit(EXIT_FAILURE);
+  }
   // Cost
   auto cost = solution.obj_value;
   std::cout << "Cost " << cost << std::endl;
